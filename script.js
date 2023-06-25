@@ -40,33 +40,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveSnake() {
         const head = Object.assign({}, snake[0]);
+        let newHead = { ...head }; // New head position
         switch (direction) {
             case 'up':
-                head.row--;
-                if (head.row < 0) {
-                    head.row = 39;
+                newHead.row--;
+                if (newHead.row < 0) {
+                    newHead.row = 39;
                 }
                 break;
             case 'down':
-                head.row++;
-                if (head.row >= 40) {
-                    head.row = 0;
+                newHead.row++;
+                if (newHead.row >= 40) {
+                    newHead.row = 0;
                 }
                 break;
             case 'left':
-                head.col--;
-                if (head.col < 0) {
-                    head.col = 39;
+                newHead.col--;
+                if (newHead.col < 0) {
+                    newHead.col = 39;
                 }
                 break;
             case 'right':
-                head.col++;
-                if (head.col >= 40) {
-                    head.col = 0;
+                newHead.col++;
+                if (newHead.col >= 40) {
+                    newHead.col = 0;
                 }
                 break;
         }
-        if (head.row === getRow(food) && head.col === getCol(food)) {
+
+        // Check if new head position overlaps with snake body
+        const overlap = snake.find(part => part.row === newHead.row && part.col === newHead.col);
+
+        if (overlap) {
+            // Game over condition
+            clearInterval(gameInterval);
+            alert('Game Over!');
+            return;
+        }
+
+        if (newHead.row === getRow(food) && newHead.col === getCol(food)) {
             food.classList.remove('food');
             score++;
             scoreBoard.textContent = `Score: ${score}`;
@@ -76,11 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const tailPixel = document.getElementById(`pixel${tail.row * 40 + tail.col + 1}`);
             tailPixel.classList.remove('snakeBodyPixel');
         }
-        snake.unshift(head);
-        const headPixel = document.getElementById(`pixel${head.row * 40 + head.col + 1}`);
-        headPixel.classList.add('snakeBodyPixel');
 
-        setTimeout(moveSnake, 100);
+        snake.unshift(newHead);
+        const headPixel = document.getElementById(`pixel${newHead.row * 40 + newHead.col + 1}`);
+        headPixel.classList.add('snakeBodyPixel');
     }
 
     document.addEventListener('keydown', event => {
@@ -106,5 +117,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createPixels();
     createFood();
-    moveSnake();
+    const gameInterval = setInterval(moveSnake, 100);
 });
