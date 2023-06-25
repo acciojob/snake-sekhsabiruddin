@@ -1,4 +1,3 @@
-//your code here
 document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('gameContainer');
     const scoreBoard = document.createElement('div');
@@ -44,23 +43,29 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (direction) {
             case 'up':
                 head.row--;
+                if (head.row < 0) {
+                    head.row = 39;
+                }
                 break;
             case 'down':
                 head.row++;
+                if (head.row >= 40) {
+                    head.row = 0;
+                }
                 break;
             case 'left':
                 head.col--;
+                if (head.col < 0) {
+                    head.col = 39;
+                }
                 break;
             case 'right':
                 head.col++;
+                if (head.col >= 40) {
+                    head.col = 0;
+                }
                 break;
         }
-        if (head.row < 0 || head.row >= 40 || head.col < 0 || head.col >= 40 || snake.find(part => part.row === head.row && part.col === head.col)) {
-            clearInterval(gameInterval);
-            alert(`Game Over! Your score: ${score}`);
-            return;
-        }
-        snake.unshift(head);
         if (head.row === getRow(food) && head.col === getCol(food)) {
             food.classList.remove('food');
             score++;
@@ -71,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tailPixel = document.getElementById(`pixel${tail.row * 40 + tail.col + 1}`);
             tailPixel.classList.remove('snakeBodyPixel');
         }
+        snake.unshift(head);
         const headPixel = document.getElementById(`pixel${head.row * 40 + head.col + 1}`);
         headPixel.classList.add('snakeBodyPixel');
     }
