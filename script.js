@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         snake.unshift(head);
         const headPixel = document.getElementById(`pixel${head.row * 40 + head.col + 1}`);
         headPixel.classList.add('snakeBodyPixel');
+
+        setTimeout(moveSnake, 100);
     }
 
     document.addEventListener('keydown', event => {
@@ -104,5 +106,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createPixels();
     createFood();
-    const gameInterval = setInterval(moveSnake, 100);
+    moveSnake();
 });
